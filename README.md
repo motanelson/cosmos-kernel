@@ -1,2 +1,3 @@
-# excel-money
-exel models to money control
+# command line sample
+
+
