@@ -7,6 +7,8 @@ using Point = Cosmos.System.Graphics.Point;
 using Sys = Cosmos.System;
 using Cosmos.HAL;
 using Cosmos.Core.IOGroup;
+using System.Linq;
+using Cosmos.System.Graphics.Extensions;
 
 namespace CosmosKernel3
 {
@@ -34,27 +36,27 @@ namespace CosmosKernel3
         int maxx;
         int maxwins;
         int cursorSize;
-        int xxxx=0;
-        int yyyy=0;
+        int xxxx = 0;
+        int yyyy = 0;
         Color colorCursor;
         Color desktopColor;
         windowss cursors;
-        Boolean Mmouseini=false;
+        Boolean Mmouseini = false;
         Boolean c1 = false;
 
-        int parts(int i,int t)
+        int parts(int i, int t)
         {
-            return i/t;
+            return i / t;
         }
-        void getCursor(Bitmap bts,int x, int y)
+        void getCursor(Bitmap bts, int x, int y)
         {
-            int n=0;
+            int n = 0;
             int nn = 0;
             for (n = 0; n < cursorSize; n++)
             {
                 for (nn = 0; nn < cursorSize; nn++)
                 {
-                    psets(bts, nn, n, canvas.GetPointColor(x+nn, y+n).ToArgb());
+                    psets(bts, nn, n, canvas.GetPointColor(x + nn, y + n).ToArgb());
                 }
             }
         }
@@ -69,14 +71,22 @@ namespace CosmosKernel3
             }
             canvas.Display();
         }
-        windowss createWindow(int x,int y,int w,int h,int colorss)
+void redrawWindow(windowss www)
+        {
+           
+            fills(www.dc, www.colorss);
+            rets(www.dc, 0, 0, (int)www.w - 1, (int)www.w - 1, 0);
+            
+
+        }
+        windowss createWindow(int x, int y, int w, int h, int colorss)
         {
             windowss windowsss = new windowss();
             windowsss.y = y;
             windowsss.x = x;
             windowsss.w = w;
             windowsss.h = h;
-            windowsss.dc = createsbitmap((uint)windowsss.w,(uint) windowsss.h);
+            windowsss.dc = createsbitmap((uint)windowsss.w, (uint)windowsss.h);
             windowsss.colorss = colorss;
             fills(windowsss.dc, windowsss.colorss);
             rets(windowsss.dc, 0, 0, (int)w - 1, (int)w - 1, 0);
@@ -92,15 +102,15 @@ namespace CosmosKernel3
 
 
         }
-        void boxs(Bitmap b, int x, int y,int x1, int y1, int colors)
+        void boxs(Bitmap b, int x, int y, int x1, int y1, int colors)
         {
             int n = 0;
-    
 
-            if (y1>=y) {
+
+            if (y1 >= y) {
                 for (n = 0; n < y1 - y; n++)
                 {
-                    hlines(b,x, y + n, x1, colors);  
+                    hlines(b, x, y + n, x1, colors);
                 }
             }
         }
@@ -112,36 +122,36 @@ namespace CosmosKernel3
             {
                 for (n = 0; n < y1 - y; n++)
                 {
-                    bt[y * b.Width + x + (n* b.Width)] = colors;
+                    bt[y * b.Width + x + (n * b.Width)] = colors;
                 }
             }
         }
-        void hlines(Bitmap b, int x, int y,int x1, int colors)
+        void hlines(Bitmap b, int x, int y, int x1, int colors)
         {
             int n = 0;
             int[] bt = b.rawData;
             if (x < b.Width && y < b.Height && x > -1 && y > -1 && x1 < b.Width && x1 > -1 && x1 >= x) {
-                for (n = 0; n < x1 - x;n++)
+                for (n = 0; n < x1 - x; n++)
                 {
-                    bt[y * b.Width + x+n] = colors;
+                    bt[y * b.Width + x + n] = colors;
                 }
             }
         }
-        void psets(Bitmap b,int x , int y,int colors)
+        void psets(Bitmap b, int x, int y, int colors)
         {
             int n = 0;
             int[] bt = b.rawData;
-            if (x< b.Width && y<b.Height && x>-1 && y>-1) bt[y*b.Width+x] = colors;
+            if (x < b.Width && y < b.Height && x > -1 && y > -1) bt[y * b.Width + x] = colors;
         }
-        int colors(byte reds,byte greens ,byte blues) {
-            return blues | greens << 8 | reds  <<16;
+        int colors(byte reds, byte greens, byte blues) {
+            return blues | greens << 8 | reds << 16;
         }
         Bitmap createsbitmap(uint x, uint y)
         {
             Bitmap bitmap = new Bitmap(x, y, ColorDepth.ColorDepth32);
             return bitmap;
         }
-        void fills(Bitmap b,int colors)
+        void fills(Bitmap b, int colors)
         {
             int n = 0;
             int[] bt = b.rawData;
@@ -155,8 +165,8 @@ namespace CosmosKernel3
             int y = 0;
             int xx = maxx - 1;
             int yy = maxy - 1;
-            
-            mmouse Mmouse=new mmouse();
+
+            mmouse Mmouse = new mmouse();
             int c = new Pen(Color.Black).ValueARGB;
             if (!Mmouseini)
             {
@@ -169,9 +179,20 @@ namespace CosmosKernel3
                 xxxx = x;
                 yyyy = y;
             }
-            xx = xxxx;
-            yy = yyyy;
-                while (n==0)
+            else
+            {
+                x = (int)Sys.MouseManager.X;
+                n = 0;
+                y = (int)Sys.MouseManager.Y;
+                xxxx = x;
+                yyyy = y;
+                xxxx=x;
+                yyyy=y;
+                getCursor(cursors.dc, x, y);
+            }
+
+            
+            while (n == 0)
             {
                 x = (int)Sys.MouseManager.X;
                 n = (int)Sys.MouseManager.MouseState;
@@ -196,7 +217,7 @@ namespace CosmosKernel3
                         xxxx = xx;
                         yyyy = yy;
                         canvas.Display();
-                        
+
                     }
                 }
 
@@ -206,19 +227,37 @@ namespace CosmosKernel3
             Mmouse.clicks = n;
             return Mmouse;
         }
+        Boolean inside(int x, int y, int x1, int y1, int x2, int y2)
+        {
+            if (x > x1 && x < x2 && y > y1 && y < x2) return true;
+            return false;
+        }
+        int gettheWindows(windowss[] windowsss, int x, int y, int clicks)
+        {
+            int n = 0;
+            if (clicks != 0 && windowsss.Count() > 0)
+            {
+                for (n = windowsss.Count() - 1; n > -1; n--)
+                {
+                    if (inside(x, y, windowsss[n].x, windowsss[n].y, windowsss[n].x + windowsss[n].w, windowsss[n].y + windowsss[n].h)) return n;
+                    
+                }
+            }
+            return -1;
+        }
         protected override void BeforeRun()
         {
             maxx = 640;
             maxy = 480;
             maxwins = 10;
             cursorSize = 8;
-            colorCursor=Color.White ;
+            colorCursor = Color.White;
             desktopColor = Color.Green;
             Console.WriteLine("start.");
             canvas = FullScreenCanvas.GetFullScreenCanvas(new Mode(maxx, maxy, ColorDepth.ColorDepth32));
             canvas.Clear(Color.Green);
-            Sys.MouseManager.ScreenHeight =(uint) (maxy-cursorSize)  ;
-            Sys.MouseManager.ScreenWidth =(uint) (maxx - cursorSize) ;
+            Sys.MouseManager.ScreenHeight = (uint)(maxy - cursorSize);
+            Sys.MouseManager.ScreenWidth = (uint)(maxx - cursorSize);
 
         }
 
@@ -228,28 +267,44 @@ namespace CosmosKernel3
             int n = 0;
             int x = 0;
             int y = 0;
-            int xx = maxx-1;
-            int yy = maxy-1;
-            mmouse Mmouse=new mmouse();
-           
-            Boolean  c1 = false;
-           int c = new Pen(Color.Black).ValueARGB ;
+            int xx = maxx - 1;
+            int yy = maxy - 1;
+            mmouse Mmouse = new mmouse();
+
+            Boolean c1 = false;
+            int c = new Pen(Color.Black).ValueARGB;
             windowss[] windowsss = new windowss[maxwins];
-        
-            for (n=0;n< maxwins; n++) windowsss[n]=createWindow(n * 10 + 8, n * 10 + 8,100, 100,colors(0,(byte)parts(0xff,n),0));
-             drawWindows(windowsss);
 
-            while (1==1)
+            for (n = 0; n < maxwins; n++) windowsss[n] = createWindow(n * 10 + 8, n * 10 + 8, 100, 100, colors(0, (byte)parts(0xff, n), 0));
+            drawWindows(windowsss);
+
+            while (1 == 1)
             {
-                Mmouse=drawcursor();
-
-
-                    
+                Mmouse = drawcursor();
                 
+                if (Mmouse.clicks > 0)
+                {
+                   
+                    n = gettheWindows(windowsss, Mmouse.xx, Mmouse.yy, Mmouse.clicks);
+                    if (n > -1)
 
+                    {
+                        Console.Beep();
+                        windowsss[n].colorss = colors(64, 0xff, 64);
+                        redrawWindow(windowsss[n]);
+                        drawWindows(windowsss);
+                        c1 = false;
+                        
+                    }
+
+
+
+                }
             }
             Console.ReadKey();
-           
+
+
         }
+        
     }
 }
