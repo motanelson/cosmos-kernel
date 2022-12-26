@@ -40,6 +40,7 @@ namespace CosmosKernel3
         Color desktopColor;
         windowss cursors;
         Boolean Mmouseini=false;
+        Boolean c1 = false;
 
         int parts(int i,int t)
         {
@@ -154,7 +155,7 @@ namespace CosmosKernel3
             int y = 0;
             int xx = maxx - 1;
             int yy = maxy - 1;
-            Boolean c1 = false;
+            
             mmouse Mmouse=new mmouse();
             int c = new Pen(Color.Black).ValueARGB;
             if (!Mmouseini)
@@ -192,7 +193,8 @@ namespace CosmosKernel3
                         canvas.DrawFilledEllipse(new Pen(colorCursor), new Point(x + (cursorSize / 2), y + (cursorSize / 2)), (cursorSize - 1) / 2, (cursorSize - 1) / 2);
                         xx = x;
                         yy = y;
-
+                        xxxx = xx;
+                        yyyy = yy;
                         canvas.Display();
                         
                     }
@@ -229,7 +231,7 @@ namespace CosmosKernel3
             int xx = maxx-1;
             int yy = maxy-1;
             mmouse Mmouse=new mmouse();
-            windowss cursors= createWindow(0, 0, cursorSize, cursorSize, colors(0, (byte)parts(0xff, n), 0));
+           
             Boolean  c1 = false;
            int c = new Pen(Color.Black).ValueARGB ;
             windowss[] windowsss = new windowss[maxwins];
