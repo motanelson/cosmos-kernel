@@ -1,3 +1,3 @@
-# command line sample
+# cosmos kernel graphics
 
 
