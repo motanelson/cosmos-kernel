@@ -1,310 +1,119 @@
-﻿using Cosmos.System.Graphics;
+﻿using Cosmos.HAL.BlockDevice.Registers;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Drawing;
+using System.IO;
 using System.Text;
-using Point = Cosmos.System.Graphics.Point;
 using Sys = Cosmos.System;
-using Cosmos.HAL;
-using Cosmos.Core.IOGroup;
-using System.Linq;
-using Cosmos.System.Graphics.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace CosmosKernel3
+namespace CosmosKernel6
 {
 
-    public class windowss
-    {
-        public int x = 0;
-        public int y = 0;
-        public int w = 0;
-        public int h = 0;
-        public Bitmap dc;
-        public int colorss;
-    }
-    public class mmouse
-    {
-        public int xx = 0;
-        public int yy = 0;
-        public int ini = 0;
-        public int clicks =0;
-    }
     public class Kernel : Sys.Kernel
     {
-        Canvas canvas;
-        int maxy;
-        int maxx;
-        int maxwins;
-        int cursorSize;
-        int xxxx = 0;
-        int yyyy = 0;
-        Color colorCursor;
-        Color desktopColor;
-        windowss cursors;
-        Boolean Mmouseini = false;
-        Boolean c1 = false;
-
-        int parts(int i, int t)
+        Sys.FileSystem.CosmosVFS fs;
+        void helps()
         {
-            return i / t;
+            Console.WriteLine("cls clear screen");
+            Console.WriteLine("echo ");
+            Console.WriteLine("exit shutdown");
+            Console.WriteLine("help");
+            Console.WriteLine("dir list file sys");
+            Console.WriteLine("type file");
         }
-        void getCursor(Bitmap bts, int x, int y)
+        void dir()
         {
-            int n = 0;
-            int nn = 0;
-            for (n = 0; n < cursorSize; n++)
+            var fs_type = fs.GetFileSystemType(@"0:\");
+            Console.WriteLine("File System Type: " + fs_type);
+            var directory_list = Directory.GetFiles(@"0:\");
+            foreach (var file in directory_list)
             {
-                for (nn = 0; nn < cursorSize; nn++)
+                Console.WriteLine(file);
+            }
+            var available_space = fs.GetAvailableFreeSpace(@"0:\");
+            Console.WriteLine("Available Free Space: " + available_space);
+        }
+        void shells(String[] s)
+        {
+            string ss="";
+            if (s.Length > 0)
+            {
+                ss = s[0].ToLower().Trim();
+                switch (ss)
                 {
-                    psets(bts, nn, n, canvas.GetPointColor(x + nn, y + n).ToArgb());
+                    case ("dir"):
+                        dir();
+                    break;
+                    case ("cls"):
+                        Console.Clear();
+                        break;
+                    case ("echo"):
+                        if (s.Length > 1) Console.WriteLine(s[1]);
+                        break;
+                    case ("exit"):
+                    Cosmos.System.Power.Shutdown();
+                        break;
+                    case ("reboot"):
+                        Cosmos.System.Power.Reboot();
+                        break;
+                    case ("type"):
+                        if (s.Length > 1)
+                        {
+                            try
+                            {
+                                Console.WriteLine(File.ReadAllText(@"0:\" + s[1]));
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e.ToString());
+                            }
+                            
+                        }
+                        break;
+                    case ("help"):
+                        helps();
+                        break;
+                    default:
+                        Console.WriteLine("invalid command");
+                        break;
                 }
             }
-        }
-
-        void drawWindows(windowss[] wins)
-        {
-            int n = 0;
-            canvas.Clear(desktopColor);
-            for (n = 0; n < wins.Length; n++)
-            {
-                canvas.DrawImage(wins[n].dc, new Point(wins[n].x, wins[n].y));
-            }
-            canvas.Display();
-        }
-void redrawWindow(windowss www)
-        {
-           
-            fills(www.dc, www.colorss);
-            rets(www.dc, 0, 0, (int)www.w - 1, (int)www.w - 1, 0);
-            
-
-        }
-        windowss createWindow(int x, int y, int w, int h, int colorss)
-        {
-            windowss windowsss = new windowss();
-            windowsss.y = y;
-            windowsss.x = x;
-            windowsss.w = w;
-            windowsss.h = h;
-            windowsss.dc = createsbitmap((uint)windowsss.w, (uint)windowsss.h);
-            windowsss.colorss = colorss;
-            fills(windowsss.dc, windowsss.colorss);
-            rets(windowsss.dc, 0, 0, (int)w - 1, (int)w - 1, 0);
-            return windowsss;
-        }
-        void rets(Bitmap b, int x, int y, int x1, int y1, int colors)
-        {
-
-            hlines(b, x, y, x1, colors);
-            hlines(b, x, y1, x1, colors);
-            vlines(b, x, y, y1, colors);
-            vlines(b, x1, y, y1, colors);
-
-
-        }
-        void boxs(Bitmap b, int x, int y, int x1, int y1, int colors)
-        {
-            int n = 0;
-
-
-            if (y1 >= y) {
-                for (n = 0; n < y1 - y; n++)
-                {
-                    hlines(b, x, y + n, x1, colors);
-                }
-            }
-        }
-        void vlines(Bitmap b, int x, int y, int y1, int colors)
-        {
-            int n = 0;
-            int[] bt = b.rawData;
-            if (x < b.Width && y < b.Height && x > -1 && y > -1 && y1 < b.Height && y1 > -1 && y1 >= y)
-            {
-                for (n = 0; n < y1 - y; n++)
-                {
-                    bt[y * b.Width + x + (n * b.Width)] = colors;
-                }
-            }
-        }
-        void hlines(Bitmap b, int x, int y, int x1, int colors)
-        {
-            int n = 0;
-            int[] bt = b.rawData;
-            if (x < b.Width && y < b.Height && x > -1 && y > -1 && x1 < b.Width && x1 > -1 && x1 >= x) {
-                for (n = 0; n < x1 - x; n++)
-                {
-                    bt[y * b.Width + x + n] = colors;
-                }
-            }
-        }
-        void psets(Bitmap b, int x, int y, int colors)
-        {
-            int n = 0;
-            int[] bt = b.rawData;
-            if (x < b.Width && y < b.Height && x > -1 && y > -1) bt[y * b.Width + x] = colors;
-        }
-        int colors(byte reds, byte greens, byte blues) {
-            return blues | greens << 8 | reds << 16;
-        }
-        Bitmap createsbitmap(uint x, uint y)
-        {
-            Bitmap bitmap = new Bitmap(x, y, ColorDepth.ColorDepth32);
-            return bitmap;
-        }
-        void fills(Bitmap b, int colors)
-        {
-            int n = 0;
-            int[] bt = b.rawData;
-            for (n = 0; n < b.Height * b.Width; n++) bt[n] = colors;
-        }
-        mmouse drawcursor()
-        {
-            Pen pen = new Pen(Color.DarkGreen);
-            int n = 0;
-            int x = 0;
-            int y = 0;
-            int xx = maxx - 1;
-            int yy = maxy - 1;
-
-            mmouse Mmouse = new mmouse();
-            int c = new Pen(Color.Black).ValueARGB;
-            if (!Mmouseini)
-            {
-                Mmouseini = true;
-                cursors = createWindow(0, 0, cursorSize, cursorSize, colors(0, (byte)parts(0xff, n), 0));
-
-                x = (int)Sys.MouseManager.X;
-                n = 0;
-                y = (int)Sys.MouseManager.Y;
-                xxxx = x;
-                yyyy = y;
-            }
-            else
-            {
-                x = (int)Sys.MouseManager.X;
-                n = 0;
-                y = (int)Sys.MouseManager.Y;
-                xxxx = x;
-                yyyy = y;
-                xxxx=x;
-                yyyy=y;
-                getCursor(cursors.dc, x, y);
-            }
+                
 
             
-            while (n == 0)
-            {
-                x = (int)Sys.MouseManager.X;
-                n = (int)Sys.MouseManager.MouseState;
-                y = (int)Sys.MouseManager.Y;
-                if (x != xx || y != yy)
-                {
-                    if (!c1)
-                    {
-                        xx = x;
-                        yy = y;
-                        getCursor(cursors.dc, x, y);
-                        c1 = true;
-                    }
-                    else
-                    {
-
-                        canvas.DrawImage(cursors.dc, new Point(xx, yy));
-                        getCursor(cursors.dc, x, y);
-                        canvas.DrawFilledEllipse(new Pen(colorCursor), new Point(x + (cursorSize / 2), y + (cursorSize / 2)), (cursorSize - 1) / 2, (cursorSize - 1) / 2);
-                        xx = x;
-                        yy = y;
-                        xxxx = xx;
-                        yyyy = yy;
-                        canvas.Display();
-
-                    }
-                }
-
-            }
-            Mmouse.xx = x;
-            Mmouse.yy = y;
-            Mmouse.clicks = n;
-            return Mmouse;
         }
-        Boolean inside(int x, int y, int x1, int y1, int x2, int y2)
+        void commands()
         {
-            if (x > x1 && x < x2 && y > y1 && y < x2) return true;
-            return false;
-        }
-        int gettheWindows(windowss[] windowsss, int x, int y, int clicks)
-        {
-            int n = 0;
-            if (clicks != 0 && windowsss.Count() > 0)
-            {
-                for (n = windowsss.Count() - 1; n > -1; n--)
-                {
-                    if (inside(x, y, windowsss[n].x, windowsss[n].y, windowsss[n].x + windowsss[n].w, windowsss[n].y + windowsss[n].h)) return n;
-                    
-                }
-            }
-            return -1;
+            
+            Console.Write("0:\\>: ");
+            var input = Console.ReadLine();
+            String[] s=input.Split(" ");
+            shells(s);
         }
         protected override void BeforeRun()
         {
-            maxx = 640;
-            maxy = 480;
-            maxwins = 10;
-            cursorSize = 8;
-            colorCursor = Color.White;
-            desktopColor = Color.Green;
-            Console.WriteLine("start.");
-            canvas = FullScreenCanvas.GetFullScreenCanvas(new Mode(maxx, maxy, ColorDepth.ColorDepth32));
-            canvas.Clear(Color.Green);
-            Sys.MouseManager.ScreenHeight = (uint)(maxy - cursorSize);
-            Sys.MouseManager.ScreenWidth = (uint)(maxx - cursorSize);
 
+            fs = new Sys.FileSystem.CosmosVFS();
+            Sys.FileSystem.VFS.VFSManager.RegisterVFS(fs);
+            Console.BackgroundColor = ConsoleColor.Green;
+            Console.Clear();
+            Console.WriteLine("command line sample.");
+            helps();
         }
 
         protected override void Run()
         {
-            Pen pen = new Pen(Color.DarkGreen);
-            int n = 0;
-            int x = 0;
-            int y = 0;
-            int xx = maxx - 1;
-            int yy = maxy - 1;
-            mmouse Mmouse = new mmouse();
-
-            Boolean c1 = false;
-            int c = new Pen(Color.Black).ValueARGB;
-            windowss[] windowsss = new windowss[maxwins];
-
-            for (n = 0; n < maxwins; n++) windowsss[n] = createWindow(n * 10 + 8, n * 10 + 8, 100, 100, colors(0, (byte)parts(0xff, n), 0));
-            drawWindows(windowsss);
-
-            while (1 == 1)
-            {
-                Mmouse = drawcursor();
-                
-                if (Mmouse.clicks > 0)
-                {
-                   
-                    n = gettheWindows(windowsss, Mmouse.xx, Mmouse.yy, Mmouse.clicks);
-                    if (n > -1)
-
-                    {
-                        Console.Beep();
-                        windowsss[n].colorss = colors(64, 0xff, 64);
-                        redrawWindow(windowsss[n]);
-                        drawWindows(windowsss);
-                        c1 = false;
-                        
-                    }
 
 
+            commands();
 
-                }
-            }
-            Console.ReadKey();
+
 
 
         }
-        
     }
 }
