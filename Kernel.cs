@@ -9,6 +9,7 @@ using Sys = Cosmos.System;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace CosmosKernel6
 {
@@ -61,7 +62,19 @@ namespace CosmosKernel6
                         Console.Clear();
                         break;
                     case ("echo"):
-                        if (s.Length > 1) Console.WriteLine(s[1]);
+
+                        if (s.Length > 1)
+                        {
+                            int n = 0;
+                            String jjj = "";
+                            
+                            for (n = 1; n < s.Length; n++)
+                            {
+                                String o = s[n];
+                                jjj = jjj + o + " ";
+                            }
+                            Console.WriteLine(jjj);
+                        }
                         break;
                     case ("exit"):
                     Cosmos.System.Power.Shutdown();
@@ -155,6 +168,10 @@ namespace CosmosKernel6
 
             
         }
+        void shelll(String[] s)
+        {
+            if (s[0].Trim()!="")shells(s);
+        }
         void commands()
         {
             
@@ -162,7 +179,12 @@ namespace CosmosKernel6
             if (onBat)
             {
                 int n = 0;
-                for (n = 0; n < bats.Length; n++) shells(bats[n].Split(" "));
+                for (n = 0; n < bats.Length; n++)
+                {
+                    String sss = bats[n];
+                    String[] s = sss.Split(" ");
+                    shelll(s);
+                }
                 onBat = false;
             }
             else
@@ -170,7 +192,7 @@ namespace CosmosKernel6
                 Console.Write("0:\\>: ");
                 var input = Console.ReadLine();
                 String[] s = input.Split(" ");
-                shells(s);
+                shelll(s);
             }
         }
         protected override void BeforeRun()
