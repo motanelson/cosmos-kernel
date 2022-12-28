@@ -141,6 +141,31 @@ namespace CosmosKernel6
 
                         }
                         break;
+                    case ("color"):
+                        if (s.Length > 1)
+                        {
+                            try
+                            {
+                                
+                                int i=0;
+                                i = int.Parse(s[1]);
+                                i=i & 7;
+                                if (i < 1 || i > 7) Console.ForegroundColor = ConsoleColor.Black;
+                                if (i==1) Console.ForegroundColor = ConsoleColor.Blue;
+                                if (i == 2) Console.ForegroundColor = ConsoleColor.Green;
+                                if (i == 3) Console.ForegroundColor = ConsoleColor.Cyan;
+                                if (i == 4) Console.ForegroundColor = ConsoleColor.Red;
+                                if (i == 5) Console.ForegroundColor = ConsoleColor.Magenta;
+                                if (i == 6) Console.ForegroundColor = ConsoleColor.Yellow;
+                                if (i == 7) Console.ForegroundColor = ConsoleColor.White;
+                               
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e.ToString());
+                            }
+                        }
+                        break;
                     case ("help"):
                         helps();
                         break;
