@@ -26,7 +26,8 @@ namespace CosmosKernel6
             Console.WriteLine("type file");
             Console.WriteLine("reboot restart");
             Console.WriteLine("help");
-
+            Console.WriteLine("copy file1 newfile");
+            Console.WriteLine("edit file1 edit line");
 
         }
         void dir()
@@ -87,6 +88,32 @@ namespace CosmosKernel6
                                 sss=File.ReadAllText(@"0:\" + s[1]);
                                 var file_stream = File.Create(@"0:\" + s[2]);
                                 File.WriteAllText(@"0:\" + s[2], sss);
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e.ToString());
+                            }
+
+                        }
+                        break;
+                    case ("edit"):
+                        if (s.Length > 1)
+                        {
+                            try
+                            {
+                                Console.WriteLine("enter a empty line to exit");
+                                String sss = "";
+                                String ssss = ".";
+                                while (ssss != "")
+                                {
+                                    var input = Console.ReadLine();
+                                    sss = sss+input + "\r\n";
+                                    ssss = input;
+                                }
+                               
+                                
+                                var file_stream = File.Create(@"0:\" + s[1]);
+                                File.WriteAllText(@"0:\" + s[1], sss);
                             }
                             catch (Exception e)
                             {
