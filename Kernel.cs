@@ -19,6 +19,19 @@ namespace CosmosKernel6
         Sys.FileSystem.CosmosVFS fs;
         String[] bats = null;
         Boolean onBat = false;
+        String Hexs(byte b)
+        {
+            String ss = "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF";
+            String sss = "";
+            int i = b;
+            int ii = 0;
+            int iii = 0;
+            ii = i / 16;
+            iii = i - ii * 16;
+            sss = ss[ii].ToString();
+            sss = sss+ss[iii].ToString();
+            return sss;
+        }
         void helps()
         {
             Console.WriteLine("cls clear screen");
@@ -31,7 +44,9 @@ namespace CosmosKernel6
             Console.WriteLine("help");
             Console.WriteLine("copy file1 newfile");
             Console.WriteLine("edit file1 edit line");
+            Console.WriteLine("color 0");
             Console.WriteLine("command my.bat");
+            Console.WriteLine("hex my.bat ");
 
 
         }
@@ -96,6 +111,38 @@ namespace CosmosKernel6
                                 Console.WriteLine(e.ToString());
                             }
                             
+                        }
+                        break;
+                    case ("hex"):
+                        if (s.Length > 1)
+                        {
+                            try
+                            {
+                                int i = 0;
+                                int ii = 0;
+                                String sss = File.ReadAllText(@"0:\" + s[1]);
+                                if (sss.Length > 0)
+                                {
+                                    for (i = 0; i < sss.Length; i++)
+                                    {
+                                        Console.Write(Hexs((byte)sss[i]) + " ");
+                                        ii++;
+                                        if (ii > 15)
+                                        {
+
+                                            ii = 0;
+                                            Console.WriteLine("");
+                                        }
+
+                                    }
+                                    Console.WriteLine("");
+                                }
+                            }   
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e.ToString());
+                            }
+
                         }
                         break;
                     case ("copy"):
