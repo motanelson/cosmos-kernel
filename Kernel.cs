@@ -16,6 +16,8 @@ namespace CosmosKernel6
     public class Kernel : Sys.Kernel
     {
         Sys.FileSystem.CosmosVFS fs;
+        String[] bats = null;
+        Boolean onBat = false;
         void helps()
         {
             Console.WriteLine("cls clear screen");
@@ -28,6 +30,8 @@ namespace CosmosKernel6
             Console.WriteLine("help");
             Console.WriteLine("copy file1 newfile");
             Console.WriteLine("edit file1 edit line");
+            Console.WriteLine("command my.bat");
+
 
         }
         void dir()
@@ -125,6 +129,23 @@ namespace CosmosKernel6
                     case ("help"):
                         helps();
                         break;
+                    case ("command"):
+                        if (s.Length > 1)
+                        {
+                            try
+                            {
+                                String ssss = "";
+                                ssss=File.ReadAllText(@"0:\" + s[1]);
+                                bats = ssss.Split("\n");
+                                onBat = true;
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e.ToString());
+                            }
+
+                        }
+                        break;
                     default:
                         Console.WriteLine("invalid command");
                         break;
@@ -137,10 +158,20 @@ namespace CosmosKernel6
         void commands()
         {
             
-            Console.Write("0:\\>: ");
-            var input = Console.ReadLine();
-            String[] s=input.Split(" ");
-            shells(s);
+            
+            if (onBat)
+            {
+                int n = 0;
+                for (n = 0; n < bats.Length; n++) shells(bats[n].Split(" "));
+                onBat = false;
+            }
+            else
+            {
+                Console.Write("0:\\>: ");
+                var input = Console.ReadLine();
+                String[] s = input.Split(" ");
+                shells(s);
+            }
         }
         protected override void BeforeRun()
         {
