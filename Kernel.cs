@@ -24,6 +24,10 @@ namespace CosmosKernel6
             Console.WriteLine("help");
             Console.WriteLine("dir list file sys");
             Console.WriteLine("type file");
+            Console.WriteLine("reboot restart");
+            Console.WriteLine("help");
+
+
         }
         void dir()
         {
@@ -72,6 +76,23 @@ namespace CosmosKernel6
                                 Console.WriteLine(e.ToString());
                             }
                             
+                        }
+                        break;
+                    case ("copy"):
+                        if (s.Length > 2)
+                        {
+                            try
+                            {
+                                String sss = "";
+                                sss=File.ReadAllText(@"0:\" + s[1]);
+                                var file_stream = File.Create(@"0:\" + s[2]);
+                                File.WriteAllText(@"0:\" + s[2], sss);
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e.ToString());
+                            }
+
                         }
                         break;
                     case ("help"):
