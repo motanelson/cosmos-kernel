@@ -63,15 +63,17 @@ namespace CosmosKernel6
                         break;
                     case ("echo"):
 
-                        if (s.Length > 1)
+                        if (s.Count() > 1)
                         {
                             int n = 0;
                             String jjj = "";
                             
-                            for (n = 1; n < s.Length; n++)
+                            foreach (String d in s)
                             {
-                                String o = s[n];
-                                jjj = jjj + o + " ";
+                                
+                                String o = d;
+                                if(n!=0)jjj = jjj + o + " ";
+                                n++;
                             }
                             Console.WriteLine(jjj);
                         }
@@ -149,7 +151,7 @@ namespace CosmosKernel6
                             {
                                 String ssss = "";
                                 ssss=File.ReadAllText(@"0:\" + s[1]);
-                                bats = ssss.Split("\n");
+                                bats = ssss.Split("\r\n");
                                 onBat = true;
                             }
                             catch (Exception e)
@@ -179,10 +181,10 @@ namespace CosmosKernel6
             if (onBat)
             {
                 int n = 0;
-                for (n = 0; n < bats.Length; n++)
+                foreach (String d in bats)
                 {
-                    String sss = bats[n];
-                    String[] s = sss.Split(" ");
+                    
+                    String[] s = d.Split(" ");
                     shelll(s);
                 }
                 onBat = false;
