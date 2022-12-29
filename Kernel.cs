@@ -41,7 +41,7 @@ namespace CosmosKernel6
             {
                 if (list1[n] == ss)
                 {
-                    Console.WriteLine(list1[n] + "  =   " + list2[n]);
+                    return n;
                 }
             }
                 return -1;
@@ -268,12 +268,23 @@ namespace CosmosKernel6
                         }
                         if (s.Length == 2)
                         {
-                                finds(s[1]);
+                            int n=finds(s[1]);
+                            if (n>-1) Console.WriteLine(list1[n] + "  =   " + list2[n]);
 
                         }
                         if (s.Length == 3)
                         {
-                            addlist(s[1], s[2]);
+                            int n = finds(s[1]);
+                            if (n > -1)
+                            {
+
+                                list2[n] = s[2];
+                            }
+                            else
+                            {
+                                addlist(s[1], s[2]);
+                            }
+                                
                         }
                             break;
                     default:
