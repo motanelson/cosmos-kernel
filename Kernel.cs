@@ -19,6 +19,33 @@ namespace CosmosKernel6
         Sys.FileSystem.CosmosVFS fs;
         String[] bats = null;
         Boolean onBat = false;
+        String[] list1 = new string[1000];
+        String[] list2 = new string[1000];
+        int listcount = 0;
+        void addlist(String a, String b)
+        {
+            list1[listcount] = a.Trim().ToLower();
+            list2[listcount] = b.Trim().ToLower();
+            listcount++;
+        }
+        void reports()
+        {
+            int n = 0;
+            for(n=0;n< listcount;n++) Console.WriteLine(list1[n] + "  =   " + list2[n]);
+        }
+        int finds(String s)
+        {
+            String ss =s.Trim().ToLower();
+            int n = 0;
+            for (n = 0; n < listcount; n++)
+            {
+                if (list1[n] == ss)
+                {
+                    Console.WriteLine(list1[n] + "  =   " + list2[n]);
+                }
+            }
+                return -1;
+        }
         String Hexs(byte b)
         {
             String ss = "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF";
@@ -233,6 +260,22 @@ namespace CosmosKernel6
 
                         }
                         break;
+                    case ("set"):
+                        if (s.Length == 1)
+                        {
+                            reports();
+
+                        }
+                        if (s.Length == 2)
+                        {
+                                finds(s[1]);
+
+                        }
+                        if (s.Length == 3)
+                        {
+                            addlist(s[1], s[2]);
+                        }
+                            break;
                     default:
                         Console.WriteLine("invalid command");
                         break;
