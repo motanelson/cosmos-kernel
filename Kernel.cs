@@ -298,7 +298,37 @@ namespace CosmosKernel6
         }
         void shelll(String[] s)
         {
-            if (s[0].Trim()!="")shells(s);
+            String[] ss = new string[s.Count()];
+            int n = 0;
+            if (s[0].Trim() != "")
+            {
+                if (s.Count() > 0) ss[0] = s[0].Trim().ToLower();
+                if (s.Count() > 1)
+                {
+                    for (n = 1; n < s.Count(); n++)
+                    {
+                        if(s[n].Contains('$'))
+                        {
+                            String sss=s[n].Replace('$',' ');
+                            int ii = finds(sss);
+                            if (ii > -1)
+                            {
+                                ss[n] = list2[ii];
+                            }
+                            else
+                            {
+                                ss[n] = s[0].Replace('$', ' ');
+                            }
+                        }
+                        else
+                        {
+                            ss[n] = s[n];
+                        }
+                        
+                    }
+                }
+                shells(ss);
+            }
         }
         void commands()
         {
